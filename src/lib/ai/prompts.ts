@@ -1,4 +1,4 @@
-export type PromptCategory = | "concept" | "commmunity" | "creator" | "trend" | "platform" | "event" | "opposition" | "aesthetic" | "ideology" | "media";
+export type PromptCategory = | "concept" | "community" | "creator" | "trend" | "platform" | "event" | "opposition" | "aesthetic" | "ideology" | "media";
 
 export type ObscurityLvl = 1 | 2 | 3;
 
@@ -7,7 +7,7 @@ export type RelationshipType = | "causal" | "inspired_by" | "reaction_to" | "aet
 
 export const CATEGORY_DESCRIPTIONS: Record<PromptCategory, string> = {
     concept: "An idea, theory, or philosophy",
-    commmunity: "A group, subculture, or fandom",
+    community: "A group, subculture, or fandom",
     creator: "A person chanel, or account that shaped this topic",
     trend: "A viral moment, meme, or cultural wave",
     platform: "A website, app, or space where this lives",
