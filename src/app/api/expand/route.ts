@@ -106,7 +106,7 @@ export async function POST(request: Request){
         edges: raw.edges,
         crossEdges: raw.crossEdges,
     }, {status: 200, headers:{
-        "X-RateLimit-Remaining": String(rateLimit.remaining - 1),
+        "X-RateLimit-Remaining": String(rateLimit.remaining),
         "X-RateLimit-Reset": String(rateLimit.resetInMs),
     }});
 }

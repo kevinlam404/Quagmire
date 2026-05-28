@@ -109,17 +109,17 @@ CATEGORIES:
 Return EXACTLY this JSON shape:
 {
     "rootLabel": "Topic Name",
-    "nodes: [
+    "nodes": [
         {
-            "id: "root",
+            "id": "root",
             "label": "Topic name",
             "category": "concept",
             "description": "Description here.",
             "seeds": ["seed one", "seed two"],
-            "obscurity: 1
+            "obscurity": 1
         }
     ],
-    "edges: [
+    "edges": [
         {
             "id": "edge_1",
             "source": "root",

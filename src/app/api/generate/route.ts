@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { callGemini, parseGeminiJson, sanitizeTopic, checkRateLimit, getClientIP } from "@/lib/ai/client";
-import { buildGeneratePrompt, SYSTEM_PROMPT,  } from "@/lib/ai/prompts";
+import { buildGeneratePrompt, SYSTEM_PROMPT} from "@/lib/ai/prompts";
 import type { GenerateRequest, ErrorResponse, RawGenerateResponse } from "@/types/graph";
 
 export async function POST(request: Request){
