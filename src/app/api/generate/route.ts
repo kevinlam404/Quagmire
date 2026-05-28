@@ -70,7 +70,8 @@ export async function POST(request: Request){
             buildGeneratePrompt(safe)
         );
         rawText = response.text;
-    } catch {
+    } catch (err){
+        console.error("Error calling Gemini:", err);
     return NextResponse.json(
       {
         success: false,

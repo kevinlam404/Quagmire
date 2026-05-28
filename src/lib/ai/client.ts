@@ -28,7 +28,7 @@ interface RateLimitEntry {
 }
 
 //Constants
-const MODEL_NAME = "gemini-1.5-flash";
+const MODEL_NAME = "gemini-2.0-flash";
 const MAX_TOKENS = 2048;
 const TEMPERATURE = 0.85;
 const MAX_RETRIES = 2;
@@ -228,7 +228,7 @@ export async function callGemini(
     }
     const isRetryable = isRetryableError(lastError);
     const clientError = {
-        code: isRetryable ? "AI_UNAVALIABLE": "AI_PARSE_FAILED",
+        code: isRetryable ? "AI_UNAVAILABLE": "AI_PARSE_FAILED",
         message: lastError instanceof Error ? lastError.message : "Uknown Gemini Error", retry: isRetryable,
     };
     throw clientError;
