@@ -60,9 +60,6 @@ function getApiKey(): string {
   if (!key) {
     throw new Error("GEMINI_API_KEY was not set.");
   }
-  if (!key.startsWith("AI") || key.length < 20) {
-    throw new Error("You have a malformed API key lol");
-  }
   return key;
 }
 
