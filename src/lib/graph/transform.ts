@@ -1,3 +1,4 @@
+import { MarkerType } from "@xyflow/react";
 import type { RawNode, RawEdge, RawCrossEdge, TopicNode, TopicEdge, TopicNodeData, TopicEdgeData } from "@/types/graph";
 import { CATEGORY_COLORS, OBSCURITY_STYLES } from "@/types/graph";
 import { resolveLabelToId, slugify } from "@/lib/ai/prompts";
@@ -61,17 +62,6 @@ export function transformEdge(raw: RawEdge, ObscurityLvl: 1 | 2 | 3 = 1, isCross
         relationshipType: null,
         obscurity: ObscurityLvl,
         isCrossEdge,
-        animated: ObscurityLvl === 3,
-        style: {
-            stroke: isCrossEdge ? "#888" : "#555",
-            strokeWidth: ObscurityLvl === 3 ? 2 : 1,
-            strokeDasharray: obscure.edgeStyle === "dashed" ? "5,5" : undefined,
-            opacity: obscure.edgeOpacity,
-        },
-        markerEnd: {
-            type: "arrowclosed",
-            color: isCrossEdge ? "#888" : "#555",
-        },
     };
 
     const edge: TopicEdge = {
@@ -79,6 +69,26 @@ export function transformEdge(raw: RawEdge, ObscurityLvl: 1 | 2 | 3 = 1, isCross
         source: raw.source,
         target: raw.target,
         data,
+        label: raw.label,
+        animated: ObscurityLvl === 3,
+        style: {
+        stroke: isCrossEdge ? "#888" : "#555",
+        strokeWidth: ObscurityLvl === 3 ? 2 : 1,
+        strokeDasharray: obscure.edgeStyle === "dashed" ? "5,5" : undefined,
+        opacity: obscure.edgeOpacity,
+        },
+        markerEnd: {
+        type:  MarkerType.ArrowClosed,
+        color: isCrossEdge ? "#888" : "#555",
+        },
+        labelStyle: {
+        fill:     "#aaa",
+        fontSize: 11,
+        },
+        labelBgStyle: {
+        fill:         "#1a1a1a",
+        fillOpacity:  0.8,
+        },
     };
     return edge
 }
@@ -116,7 +126,7 @@ export function transformNodes(rawNodes: RawNode[], depthMap: Record<string, num
 
 export function transformEdges(rawEdges: RawEdge[], nodes: TopicNode[]): TopicEdge[]{
     return rawEdges.map((raw) => {
-        //Inhereit obscurity from the lower of the two connected nodes
+       
         const sourceNode = nodes.find((n) => n.id === raw.source);
         const targetNode = nodes.find((n) => n.id === raw.target);
 
