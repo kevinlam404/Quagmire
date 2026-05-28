@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { callGemini, parseGeminiJson, sanitizeTopic, checkRateLimit, getClientIP } from "@/lib/ai/client";
 import { buildExpandedPrompt, SYSTEM_PROMPT} from "@/lib/ai/prompts";
 import type { ExpandRequest, ErrorResponse, RawExpandResponse } from "@/types/graph";
-import build from "next/dist/build";
+
 
 export async function POST(request: Request){
     const ip = getClientIP(request);
@@ -12,7 +12,7 @@ export async function POST(request: Request){
     if(!rateLimit.allowed){
         return NextResponse.json({
             success: false,
-            error: "Rate limit exceeded. Try again in ${Math.ceil(rateLimit.resetInMs/1000)} seconds.",
+            error: `Rate limit exceeded. Try again in ${Math.ceil(rateLimit.resetInMs/1000)} seconds.`,
             code: "RATE_LIMITED",            
         } satisfies ErrorResponse, {
             status: 429,
