@@ -1,6 +1,5 @@
 import type {Node, Edge} from "@xyflow/react";
 import type { PromptCategory, ObscurityLvl, RelationshipType } from "@/lib/ai/prompts";
-import { NapiUpdateInfo } from "next/dist/build/swc/generated-native";
 export type {PromptCategory,ObscurityLvl,RelationshipType};
 
 //Data stored inside every ReactFlow node
@@ -19,14 +18,14 @@ export interface TopicNodeData extends Record<string, unknown>{
 //Data stored inside every ReactFlow edge
 export interface TopicEdgeData extends Record<string, unknown>{
     label:string;
-    relationShipType: RelationshipType | null;
+    relationshipType: RelationshipType | null;
     obscurity: ObscurityLvl;
     isCrossEdge: boolean;
 }
 
 //Actually node/edge
 export type TopicNode = Node<TopicNodeData>;
-export type TopicEdge = Node<TopicEdgeData>;
+export type TopicEdge = Edge<TopicEdgeData>;
 
 //Raw AI reponse (What ai returns before any processing)
 export interface RawNode{
@@ -105,7 +104,7 @@ export interface ErrorResponse{
 export type ApiResponse<T> = T | ErrorResponse;
 
 //Error code
-export type ErrorCode = | "INVALID_TOPIC" | "AI_PARSE_FAILED" | "AI_UNAVAIABLE" | "NODE_NOT_FOUND" | "EXPAND_FAILED" | "RATE_LIMITED" | "UNKNOWN";
+export type ErrorCode = | "INVALID_TOPIC" | "AI_PARSE_FAILED" | "AI_UNAVAILABLE" | "NODE_NOT_FOUND" | "EXPAND_FAILED" | "RATE_LIMITED" | "UNKNOWN";
 
 //Graph State 
 export type ExplorationStatus = | "idle" | "loading" | "ready" | "expanding" | "error";
@@ -126,7 +125,7 @@ export interface GraphState{
 
     //Actions
     generateGraph: (topic: string) => Promise<void>;
-    expandNode: (topic: string) => Promise<void>;
+    expandNode: (nodeId: string) => Promise<void>;
     resetGraph: () => void;
     travelTo: (index: number) => void;
 }
