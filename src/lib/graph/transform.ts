@@ -15,7 +15,7 @@ export function transformNode(raw : RawNode, depth: number = 0): TopicNode | nul
         return null;
     }
 
-    const colors = CATEGORY_COLORS[raw.category];
+    const colors = CATEGORY_COLORS[raw.category] ?? CATEGORY_COLORS["concept"];
     const obscure = OBSCURITY_STYLES[raw.obscurity ?? 1];
 
     const data: TopicNodeData = {
@@ -68,8 +68,9 @@ export function transformEdge(raw: RawEdge, ObscurityLvl: 1 | 2 | 3 = 1, isCross
         id: raw.id,
         source: raw.source,
         target: raw.target,
+        sourceHandle: "source",
+        targetHandle: "target",
         data,
-        label: raw.label,
         animated: ObscurityLvl === 3,
         style: {
         stroke: isCrossEdge ? "#888" : "#555",
@@ -80,14 +81,6 @@ export function transformEdge(raw: RawEdge, ObscurityLvl: 1 | 2 | 3 = 1, isCross
         markerEnd: {
         type:  MarkerType.ArrowClosed,
         color: isCrossEdge ? "#888" : "#555",
-        },
-        labelStyle: {
-        fill:     "#aaa",
-        fontSize: 11,
-        },
-        labelBgStyle: {
-        fill:         "#1a1a1a",
-        fillOpacity:  0.8,
         },
     };
     return edge

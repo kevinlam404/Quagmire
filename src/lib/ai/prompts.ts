@@ -176,6 +176,8 @@ ${CATEGORY_RULES}
 crossEdges:
 -Used to connect NEW nodes to EXISTING nodes
 -sourceLabel and targetLabel must exactly match existing labels
+- Never use category names like "opposition", "concept", "trend" as labels
+- If you are not 100% sure of the exact label, do not include the crossEdge
 
 CATEGORIES: 
 "concept"

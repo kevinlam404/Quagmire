@@ -1,9 +1,33 @@
+"use client";
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen w-full flex-col items-center justify-center bg-black">
-      <h1 className="text-4xl font-bold text-white">Quagmire</h1>
-      <p className="mt-2 text-zinc-400">The internet is a web. Follow the threads.</p>
+import SearchBar from "@/components/SearchBar";
+import Graph from "@/components/Graph";
+import {useGraph} from "@/hooks/useGraph";
+
+export default function Home(){
+  const {status} = useGraph();
+  const showGraph = status !== "idle";
+
+   return (
+    <main className="relative flex flex-col items-center justify-center w-full h-screen bg-black overflow-hidden">
+      {/* Search bar */}
+      <div
+        className={[
+          "absolute z-10 transition-all duration-500",
+          showGraph
+            ? "top-6 left-1/2 -translate-x-1/2 w-full max-w-xl"
+            : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl",
+        ].join(" ")}
+      >
+        <SearchBar />
+      </div>
+
+      {/* Graph canvas */}
+      {showGraph && (
+        <div className="absolute inset-0 z-0">
+          <Graph />
+        </div>
+      )}
     </main>
   );
 }
