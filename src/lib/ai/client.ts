@@ -28,8 +28,8 @@ interface RateLimitEntry {
 }
 
 //Constants
-const MODEL_NAME = "gemini-2.0-flash";
-const MAX_TOKENS = 2048;
+const MODEL_NAME = "gemini-2.5-flash-lite";
+const MAX_TOKENS = 4096;
 const TEMPERATURE = 0.85;
 const MAX_RETRIES = 2;
 const RETRY_DELAY_MS = 1000;
