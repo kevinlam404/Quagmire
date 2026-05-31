@@ -1,27 +1,22 @@
 "use client";
 
-import {useCallback, useEffect} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {ReactFlow, Background, Controls, MiniMap, BackgroundVariant, useNodesState, useEdgesState, Handle, Position, type NodeTypes, type NodeProps} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import {useGraph} from "@/hooks/useGraph";
 import type {TopicNode, TopicEdge} from "@/types/graph";
 import {CATEGORY_COLORS, OBSCURITY_STYLES} from "@/types/graph";
+import Sidebar from "@/components/Sidebar";
 
 //Custom node
 function TopicNodeComponent({data,id}: NodeProps){
-    const {expandNode, status} = useGraph();
     const nodeData = data as TopicNode["data"];
     const colors = CATEGORY_COLORS[nodeData.category] ?? CATEGORY_COLORS["concept"];
     const obscure = OBSCURITY_STYLES[nodeData.obscurity] ?? OBSCURITY_STYLES[1];
 
-    const handleClick = useCallback(() => {
-        if(nodeData.expanded || nodeData.expanding) return;
-        expandNode(id);
-    }, [id, nodeData.expanded, nodeData.expanding, expandNode]);
 
     return (
     <div
-      onClick={handleClick}
       className={[
         obscure.nodeClass,
         "relative flex flex-col gap-1 p-3 rounded-xl border cursor-pointer select-none transition-all duration-200",
@@ -38,7 +33,7 @@ function TopicNodeComponent({data,id}: NodeProps){
       }}
     >
 
-      <Handle type="source" position={Position.Left} id="source" style={{ opacity: 0 }} />
+      <Handle type="source" position={Position.Right} id="source" style={{ opacity: 0 }} />
 
       {/* Category badge */}
       <span
@@ -90,22 +85,35 @@ export default function Graph(){
     const {nodes: storeNodes, edges: storeEdges, status} = useGraph();
     const [nodes, setNodes, onNodesChange] = useNodesState<TopicNode>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<TopicEdge>([]);
+    const [selectedNode, setSelectedNode] = useState<TopicNode | null>(null);
 
     useEffect(() => {
         setNodes(storeNodes);
         setEdges(storeEdges);
     }, [storeNodes, storeEdges, setNodes, setEdges]);
 
+    useEffect(() => {
+        if(selectedNode){
+            const updated = storeNodes.find((n) => n.id === selectedNode.id);
+            if(updated) setSelectedNode(updated);
+        }
+    }, [storeNodes]);
+
+    const handleNodeClick = useCallback((_:React.MouseEvent, node: TopicNode) => {
+        setSelectedNode(node);
+    }, []);
+
     if(status === "idle") return null;
 
     return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       <ReactFlow
         nodes={nodes}
         edges={edges}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         nodeTypes={nodeTypes}
+        onNodeClick={handleNodeClick}
         fitView
         fitViewOptions={{ padding: 0.2 }}
         minZoom={0.1}
@@ -128,6 +136,8 @@ export default function Graph(){
           maskColor="rgba(0,0,0,0.6)"
         />
       </ReactFlow>
+
+      <Sidebar node={selectedNode} onClose={() => setSelectedNode(null)} />
     </div>
   );
 }
