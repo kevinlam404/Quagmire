@@ -40,15 +40,25 @@ export function expandNode(existingNodes: TopicNode[], existingEdges: TopicEdge[
     const uniqueNewNodes = deduplicateNodes(existingNodes, newNodes);
     const uniqueNewEdges = deduplicateEdges(existingEdges, [...newEdges, ...newCrossEdges]);
 
-    //Mark expanded node as expanded
+   //Mark expanded node as expanded
     const updatedExistingNodes = existingNodes.map((n) => n.id === expandedNodeId ? {...n, data: {...n.data, expanded: true, expanding: false}}: n);
     
-    //Apply dagre layout to full merged graph
-    const mergedNodes = [...updatedExistingNodes, ...uniqueNewNodes];
+    //Apply dagre layout to NEW nodes only — keep existing nodes in place
     const mergedEdges = [...existingEdges, ...uniqueNewEdges];
-    const positionedNodes = applyDagreLayout(mergedNodes, mergedEdges);
-    
-    return{
+    const mergedNodes = [...updatedExistingNodes, ...uniqueNewNodes];
+
+    const newNodesOnly = applyDagreLayout(mergedNodes, mergedEdges, expandedNodeId);
+
+    const existingIds = new Set(updatedExistingNodes.map((n) => n.id));
+    const positionedNodes = newNodesOnly.map((n) => {
+        if(existingIds.has(n.id)){
+            const original = updatedExistingNodes.find((e) => e.id === n.id);
+            return original ?? n;
+        }
+        return n;
+    });
+
+    return {
         nodes: positionedNodes,
         edges: mergedEdges,
     };

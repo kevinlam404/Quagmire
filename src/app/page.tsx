@@ -2,13 +2,14 @@
 
 import SearchBar from "@/components/SearchBar";
 import Graph from "@/components/Graph";
-import {useGraph} from "@/hooks/useGraph";
+import { useGraph } from "@/hooks/useGraph";
+import {ReactFlowProvider} from "reactflow";
 
-export default function Home(){
-  const {status} = useGraph();
+export default function Home() {
+  const { status } = useGraph();
   const showGraph = status !== "idle";
 
-   return (
+  return (
     <main className="relative flex flex-col items-center justify-center w-full h-screen bg-black overflow-hidden">
       {/* Search bar */}
       <div
@@ -24,9 +25,11 @@ export default function Home(){
 
       {/* Graph canvas */}
       {showGraph && (
+        <ReactFlowProvider>
         <div className="absolute inset-0 z-0">
           <Graph />
         </div>
+        </ReactFlowProvider>
       )}
     </main>
   );

@@ -160,7 +160,7 @@ ${Object.entries(categoryCounts)
   .join("\n")}
 
 STRUCTURE RULES:
-- Generate 4 to 6 NEW nodes
+- Generate 2-3 NEW nodes only (do not reuse existing nodes)
 = Never recreate existing nodes
 - Avoid semantic duplicates
 - At least 2 edges must connect new nodes together

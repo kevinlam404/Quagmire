@@ -14,11 +14,14 @@ const DAGRE_CONFIG = {
 };
 
 //Dagre layout
-export function applyDagreLayout(nodes: TopicNode[], edges: TopicEdge[]): TopicNode[]{
+export function applyDagreLayout(nodes: TopicNode[], edges: TopicEdge[], rootId?: string): TopicNode[]{
     const graph = new dagre.graphlib.Graph();
 
     graph.setDefaultEdgeLabel(() => ({}));
-    graph.setGraph(DAGRE_CONFIG);
+    graph.setGraph({
+        ...DAGRE_CONFIG,
+        root: rootId
+    });
 
     //Register all nodes
     nodes.forEach((node) => {

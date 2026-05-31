@@ -7,6 +7,7 @@ import {useGraph} from "@/hooks/useGraph";
 import type {TopicNode, TopicEdge} from "@/types/graph";
 import {CATEGORY_COLORS, OBSCURITY_STYLES} from "@/types/graph";
 import Sidebar from "@/components/Sidebar";
+import { useReactFlow } from "reactflow";
 
 //Custom node
 function TopicNodeComponent({data,id}: NodeProps){
@@ -86,6 +87,7 @@ export default function Graph(){
     const [nodes, setNodes, onNodesChange] = useNodesState<TopicNode>([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState<TopicEdge>([]);
     const [selectedNode, setSelectedNode] = useState<TopicNode | null>(null);
+    const {fitView} = useReactFlow();
 
     useEffect(() => {
         setNodes(storeNodes);
@@ -96,6 +98,12 @@ export default function Graph(){
         if(selectedNode){
             const updated = storeNodes.find((n) => n.id === selectedNode.id);
             if(updated) setSelectedNode(updated);
+            //If node finished expanding, refit view to adjust for new nodes
+            if(updated?.data.expanded && !updated?.data.expanding){
+                setTimeout(() => {
+                    fitView({padding: 0.2, duration: 600});
+                }, 100);
+            }
         }
     }, [storeNodes]);
 
