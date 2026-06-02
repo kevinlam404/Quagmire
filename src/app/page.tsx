@@ -3,7 +3,8 @@
 import SearchBar from "@/components/SearchBar";
 import Graph from "@/components/Graph";
 import { useGraph } from "@/hooks/useGraph";
-import {ReactFlowProvider} from "reactflow";
+import {ReactFlowProvider} from "@xyflow/react";
+import Header from "@/components/Header";
 
 export default function Home() {
   const { status } = useGraph();
@@ -16,7 +17,7 @@ export default function Home() {
         className={[
           "absolute z-10 transition-all duration-500",
           showGraph
-            ? "top-6 left-1/2 -translate-x-1/2 w-full max-w-xl"
+            ? "top-20 left-1/2 -translate-x-1/2 w-full max-w-xl"
             : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl",
         ].join(" ")}
       >
@@ -27,6 +28,7 @@ export default function Home() {
       {showGraph && (
         <ReactFlowProvider>
         <div className="absolute inset-0 z-0">
+          <Header />  
           <Graph />
         </div>
         </ReactFlowProvider>

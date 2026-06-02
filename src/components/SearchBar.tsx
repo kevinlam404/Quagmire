@@ -8,6 +8,7 @@ export default function SearchBar() {
   const { generateGraph, status } = useGraph();
 
   const isLoading = status === "loading";
+  const showTitle = status === "idle" || status === "loading";
 
   const handleSearch = async () => {
     const trimmed = input.trim();
@@ -21,15 +22,23 @@ export default function SearchBar() {
 
   return (
     <div className="flex flex-col items-center gap-3 w-full max-w-2xl px-4">
-      {/* Title */}
-      <div className="flex flex-col items-center gap-1 mb-2">
-        <h1 className="text-4xl font-bold tracking-tight text-white">
-          Quagmire
-        </h1>
-        <p className="text-sm text-zinc-500 tracking-widest uppercase">
-          The internet is a web. Follow the threads.
-        </p>
-      </div>
+
+      {/* Title — only show when idle or loading */}
+      {showTitle && (
+        <div className="flex flex-col items-center gap-1 mb-2">
+          <h1 className="text-4xl font-bold tracking-tight text-white">
+            Quagmire
+          </h1>
+          <p className="text-sm text-zinc-500 tracking-widest uppercase">
+            The internet is a web. Follow the threads.
+          </p>
+          {isLoading && (
+            <p className="text-sm text-violet-400 tracking-widest uppercase animate-pulse mt-1">
+              Mapping the web...
+            </p>
+          )}
+        </div>
+      )}
 
       {/* Search input */}
       <div className="flex w-full gap-2">
@@ -51,7 +60,7 @@ export default function SearchBar() {
         </button>
       </div>
 
-      {/* Status messages */}
+      {/* Error message */}
       {status === "error" && (
         <p className="text-sm text-red-400 mt-1">
           Something went wrong. Try again.

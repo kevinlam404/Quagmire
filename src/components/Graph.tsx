@@ -7,7 +7,7 @@ import {useGraph} from "@/hooks/useGraph";
 import type {TopicNode, TopicEdge} from "@/types/graph";
 import {CATEGORY_COLORS, OBSCURITY_STYLES} from "@/types/graph";
 import Sidebar from "@/components/Sidebar";
-import { useReactFlow } from "reactflow";
+import { useReactFlow } from "@xyflow/react";
 
 //Custom node
 function TopicNodeComponent({data,id}: NodeProps){
@@ -21,18 +21,19 @@ function TopicNodeComponent({data,id}: NodeProps){
       className={[
         obscure.nodeClass,
         "relative flex flex-col gap-1 p-3 rounded-xl border cursor-pointer select-none transition-all duration-200",
-        nodeData.expanded   ? "opacity-60" : "hover:scale-105 hover:brightness-125",
-        nodeData.expanding  ? "animate-pulse" : "",
-        nodeData.isRoot     ? "ring-2 ring-violet-500/50" : "",
+        nodeData.expanded ? "opacity-60" : "hover:scale-105 hover:brightness-125",
+        nodeData.expanding ? "animate-pulse" : "",
+        nodeData.isRoot ? "ring-2 ring-violet-500/50" : "",
       ].join(" ")}
       style={{
-        background:  colors.background,
+        background: colors.background,
         borderColor: colors.border,
-        boxShadow:   obscure.glowIntensity !== "none" ? obscure.glowIntensity : undefined,
-        minWidth:    160,
-        maxWidth:    200,
+        boxShadow: obscure.glowIntensity !== "none" ? obscure.glowIntensity : undefined,
+        minWidth: 160,
+        maxWidth: 200,
       }}
     >
+
 
       <Handle type="source" position={Position.Right} id="source" style={{ opacity: 0 }} />
 
