@@ -15,6 +15,12 @@ function TopicNodeComponent({data,id}: NodeProps){
     const colors = CATEGORY_COLORS[nodeData.category] ?? CATEGORY_COLORS["concept"];
     const obscure = OBSCURITY_STYLES[nodeData.obscurity] ?? OBSCURITY_STYLES[1];
     const [hovered, setHovered] = useState(false);
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+      const timer = setTimeout(() => setMounted(true), nodeData.depth *200);
+      return () => clearTimeout(timer);
+    }, []); 
 
     const previewText = nodeData.description?.split(".")[0] + ".";
 
@@ -37,7 +43,16 @@ function TopicNodeComponent({data,id}: NodeProps){
         boxShadow: hovered ? `0 0 20px ${colors.border}66` : obscure.glowIntensity !== "none" ? obscure.glowIntensity : undefined,
         minWidth: 160,
         maxWidth: 200,
-        transition: "box-shadow 0.2s ease, border-color 0.2s ease",
+
+        //Entrance animation
+        opacity: mounted ? 1: 0,
+        transform: mounted ? "scale(1) translateY(0px)" : "scale(0.8) translateY(8px)",
+        transition: [
+          `opacity 0.4s ease-out ${nodeData.depth * 200}ms`,
+          `transform 0.4s ease-out ${nodeData.depth * 200}ms`,
+          "box-shadow 0.2s ease",
+          "border-color 0.2s ease",
+        ].join(","),
       }}
     >
 

@@ -71,7 +71,7 @@ export function transformEdge(raw: RawEdge, ObscurityLvl: 1 | 2 | 3 = 1, isCross
         sourceHandle: "source",
         targetHandle: "target",
         data,
-        animated: ObscurityLvl === 3,
+        animated: true,
         style: {
         stroke: isCrossEdge ? "#888" : "#555",
         strokeWidth: ObscurityLvl === 3 ? 2 : 1,
