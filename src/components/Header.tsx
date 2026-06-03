@@ -15,7 +15,7 @@ export default function Header(){
     <div className="absolute top-0 left-0 right-0 z-20 flex items-center justify-between px-6 py-3 bg-zinc-950/80 border-b border-white/10 backdrop-blur-md">
 
       {/* Left — logo */}
-      <button onClick={resetGraph} className="flex items-center gap-2 hover:opacity-70 transition-opacity">
+      <button onClick={resetGraph} className="cursor-pointer flex items-center gap-2 hover:opacity-70 transition-opacity">
         <Image
           src="/quagmire-symbol.png"
           alt="Quagmire"
@@ -72,7 +72,7 @@ export default function Header(){
         </span>
         <button
           onClick={resetGraph}
-          className="px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-200"
+          className="cursor-pointer px-3 py-1.5 rounded-lg text-xs font-medium text-zinc-400 hover:text-white border border-white/10 hover:border-white/20 bg-white/5 hover:bg-white/10 transition-all duration-200"
         >
           New Search
         </button>

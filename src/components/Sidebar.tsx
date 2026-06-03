@@ -10,7 +10,7 @@ interface SidebarProps {
 }
 
 export default function Sidebar({ node, onClose }: SidebarProps) {
-  const { expandNode, status } = useGraph();
+  const { expandNode, status, generateGraph } = useGraph();
   if (!node) return null;
 
   const nodeData = node.data;
@@ -41,7 +41,7 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
         </span>
         <button
           onClick={onClose}
-          className="text-zinc-500 hover:text-white transition-colors text-lg leading-none"
+          className="cursor-pointer text-zinc-500 hover:text-white transition-colors text-lg leading-none"
         >
           ✕
         </button>
@@ -70,12 +70,16 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
             </span>
             <div className="flex flex-wrap gap-2">
               {nodeData.seeds.map((seed: string, i: number) => (
-                <span
+                <button
                   key={i}
-                  className="text-[11px] px-2 py-1 rounded-full border border-white/10 text-zinc-400 bg-white/5"
+                  onClick={() => {
+                    onClose();
+                    generateGraph(seed);
+                  }}
+                  className=" cursor-pointer text-[11px] px-2 py-1 rounded-full border border-white/10 text-zinc-400 bg-white/5"
                 >
                   → {seed}
-                </span>
+                </button>
               ))}
             </div>
           </div>
@@ -101,7 +105,7 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
             onClick={handleExpand}
             cursor-pointer = "true"
             disabled={isLoading || isExpanding}
-            className="w-full py-3 rounded-xl text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
+            className="cursor-pointer w-full py-3 rounded-xl text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
           >
             {isExpanding ? "Following the thread..." : "Expand →"}
           </button>

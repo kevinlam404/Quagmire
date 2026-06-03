@@ -14,23 +14,30 @@ function TopicNodeComponent({data,id}: NodeProps){
     const nodeData = data as TopicNode["data"];
     const colors = CATEGORY_COLORS[nodeData.category] ?? CATEGORY_COLORS["concept"];
     const obscure = OBSCURITY_STYLES[nodeData.obscurity] ?? OBSCURITY_STYLES[1];
+    const [hovered, setHovered] = useState(false);
+
+    const previewText = nodeData.description?.split(".")[0] + ".";
 
 
     return (
     <div
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
       className={[
         obscure.nodeClass,
         "relative flex flex-col gap-1 p-3 rounded-xl border cursor-pointer select-none transition-all duration-200",
         nodeData.expanded ? "opacity-60" : "hover:scale-105 hover:brightness-125",
         nodeData.expanding ? "animate-pulse" : "",
         nodeData.isRoot ? "ring-2 ring-violet-500/50" : "",
+        hovered && !nodeData.expanded ? "brightness-125": "",
       ].join(" ")}
       style={{
         background: colors.background,
-        borderColor: colors.border,
-        boxShadow: obscure.glowIntensity !== "none" ? obscure.glowIntensity : undefined,
+        borderColor: hovered ? colors.border : `${colors.border}99`,
+        boxShadow: hovered ? `0 0 20px ${colors.border}66` : obscure.glowIntensity !== "none" ? obscure.glowIntensity : undefined,
         minWidth: 160,
         maxWidth: 200,
+        transition: "box-shadow 0.2s ease, border-color 0.2s ease",
       }}
     >
 
@@ -74,6 +81,24 @@ function TopicNodeComponent({data,id}: NodeProps){
         </span>
         
       )}
+
+        {/* Hover preview */}
+        {hovered && !nodeData.expanded && (
+        <div
+          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-48 px-3 py-2 rounded-lg text-[11px] text-zinc-300 leading-relaxed pointer-events-none"
+          style={{
+            background:  "rgba(10,10,15,0.95)",
+            border:      `1px solid ${colors.border}44`,
+            boxShadow:   `0 4px 20px rgba(0,0,0,0.5)`,
+          }}
+        >
+          {previewText}
+          <div className="mt-1 text-[10px] text-zinc-600">
+            {nodeData.expanded ? "Already explored" : "Click to explore →"}
+          </div>
+        </div>
+      )}
+
       <Handle type="target" position={Position.Left} id="target" style={{ opacity: 0 }} />
     </div>
   );
