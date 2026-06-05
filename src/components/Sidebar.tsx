@@ -49,6 +49,16 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
 
       {/* Content */}
       <div className="flex flex-col gap-4 px-4 py-4 flex-1 overflow-y-auto">
+        {/* Hero image */}
+        {nodeData.imageUrl && (
+          <div className="w-full h-36 rounded-xl overflow-hidden">
+            <img
+              src={nodeData.imageUrl}
+              alt={nodeData.label}
+              className="w-full h-full object-cover"
+            />
+          </div>
+        )}
         {/* Label */}
         <h2
           className="text-xl font-bold leading-tight"
@@ -103,7 +113,7 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
         ) : (
           <button
             onClick={handleExpand}
-            cursor-pointer = "true"
+            cursor-pointer="true"
             disabled={isLoading || isExpanding}
             className="cursor-pointer w-full py-3 rounded-xl text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
           >

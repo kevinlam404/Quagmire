@@ -25,6 +25,38 @@ function createHistoryEntry(nodes: TopicNode[], edges: TopicEdge[], trigger: str
     };
 }
 
+// Image fetcher
+async function fetchAndAttachImages(
+  nodes: TopicNode[],
+  updateNodes: (updater: (nodes: TopicNode[]) => TopicNode[]) => void
+) {
+  try {
+    const labels   = nodes.map((n) => n.data.label);
+    const response = await fetch("/api/images", {
+      method:  "POST",
+      headers: { "Content-Type": "application/json" },
+      body:    JSON.stringify({ labels }),
+    });
+
+    if (!response.ok) return;
+
+    const { images } = await response.json() as { images: Record<string, string | null> };
+
+    updateNodes((current) =>
+      current.map((node) => ({
+        ...node,
+        data: {
+          ...node.data,
+          imageUrl: images[node.data.label] ?? null,
+        },
+      }))
+    );
+
+  } catch {
+    //fail silently
+  }
+}
+
 //Store
 export const useGraph = create<GraphState>((set, get) => ({
   ...INITIAL_STATE,
@@ -64,6 +96,9 @@ export const useGraph = create<GraphState>((set, get) => ({
         history: [entry],
         historyIndex: 0,
       });
+
+      //Fetch images after graph renders
+      fetchAndAttachImages(nodes, (updater) => set((state) => ({nodes: updater(state.nodes)})));
 
     } catch {
       set({
@@ -160,6 +195,11 @@ export const useGraph = create<GraphState>((set, get) => ({
         historyIndex: trimmedHistory.length,
       });
 
+      //Fetch images for new nodes only
+      fetchAndAttachImages(newNodes, (updater) => {
+        set((state) => ({nodes: updater(state.nodes)}));
+      })
+
     } catch {
       // Revert expanding state on network error
       set({
@@ -197,5 +237,5 @@ export const useGraph = create<GraphState>((set, get) => ({
       error: null,
       historyIndex: index,
     });
-  },
+  }, 
 }));

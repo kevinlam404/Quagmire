@@ -27,7 +27,8 @@ export function transformNode(raw : RawNode, depth: number = 0): TopicNode | nul
         expanded: false,
         expanding: false,
         isRoot: raw.id === "root",
-        depth
+        depth,
+        imageUrl: null,
     }
 
     const node: TopicNode = {

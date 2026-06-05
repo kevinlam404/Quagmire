@@ -1,52 +1,72 @@
 "use client";
 
-import {useCallback, useEffect, useState} from "react";
-import {ReactFlow, Background, Controls, MiniMap, BackgroundVariant, useNodesState, useEdgesState, Handle, Position, type NodeTypes, type NodeProps} from "@xyflow/react";
+import { useCallback, useEffect, useState } from "react";
+import {
+  ReactFlow,
+  Background,
+  Controls,
+  MiniMap,
+  BackgroundVariant,
+  useNodesState,
+  useEdgesState,
+  Handle,
+  Position,
+  type NodeTypes,
+  type NodeProps,
+} from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import {useGraph} from "@/hooks/useGraph";
-import type {TopicNode, TopicEdge} from "@/types/graph";
-import {CATEGORY_COLORS, OBSCURITY_STYLES} from "@/types/graph";
+import { useGraph } from "@/hooks/useGraph";
+import type { TopicNode, TopicEdge } from "@/types/graph";
+import { CATEGORY_COLORS, OBSCURITY_STYLES } from "@/types/graph";
 import Sidebar from "@/components/Sidebar";
 import { useReactFlow } from "@xyflow/react";
 
 //Custom node
-function TopicNodeComponent({data,id}: NodeProps){
-    const nodeData = data as TopicNode["data"];
-    const colors = CATEGORY_COLORS[nodeData.category] ?? CATEGORY_COLORS["concept"];
-    const obscure = OBSCURITY_STYLES[nodeData.obscurity] ?? OBSCURITY_STYLES[1];
-    const [hovered, setHovered] = useState(false);
-    const [mounted, setMounted] = useState(false);
+function TopicNodeComponent({ data, id }: NodeProps) {
+  const nodeData = data as TopicNode["data"];
+  const colors =
+    CATEGORY_COLORS[nodeData.category] ?? CATEGORY_COLORS["concept"];
+  const obscure = OBSCURITY_STYLES[nodeData.obscurity] ?? OBSCURITY_STYLES[1];
+  const [hovered, setHovered] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
-    useEffect(() => {
-      const timer = setTimeout(() => setMounted(true), nodeData.depth *200);
-      return () => clearTimeout(timer);
-    }, []); 
+  useEffect(() => {
+    const timer = setTimeout(() => setMounted(true), nodeData.depth * 200);
+    return () => clearTimeout(timer);
+  }, []);
 
-    const previewText = nodeData.description?.split(".")[0] + ".";
+  const previewText = nodeData.description?.split(".")[0] + ".";
 
-
-    return (
+  return (
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={[
         obscure.nodeClass,
         "relative flex flex-col gap-1 p-3 rounded-xl border cursor-pointer select-none transition-all duration-200",
-        nodeData.expanded ? "opacity-60" : "hover:scale-105 hover:brightness-125",
+        nodeData.expanded
+          ? "opacity-60"
+          : "hover:scale-105 hover:brightness-125",
         nodeData.expanding ? "animate-pulse" : "",
         nodeData.isRoot ? "ring-2 ring-violet-500/50" : "",
-        hovered && !nodeData.expanded ? "brightness-125": "",
+        hovered && !nodeData.expanded ? "brightness-125" : "",
       ].join(" ")}
       style={{
         background: colors.background,
         borderColor: hovered ? colors.border : `${colors.border}99`,
-        boxShadow: hovered ? `0 0 20px ${colors.border}66` : obscure.glowIntensity !== "none" ? obscure.glowIntensity : undefined,
+        boxShadow: hovered
+          ? `0 0 20px ${colors.border}66`
+          : obscure.glowIntensity !== "none"
+            ? obscure.glowIntensity
+            : undefined,
         minWidth: 160,
         maxWidth: 200,
 
         //Entrance animation
-        opacity: mounted ? 1: 0,
-        transform: mounted ? "scale(1) translateY(0px)" : "scale(0.8) translateY(8px)",
+        opacity: mounted ? 1 : 0,
+        transform: mounted
+          ? "scale(1) translateY(0px)"
+          : "scale(0.8) translateY(8px)",
         transition: [
           `opacity 0.4s ease-out ${nodeData.depth * 200}ms`,
           `transform 0.4s ease-out ${nodeData.depth * 200}ms`,
@@ -55,9 +75,23 @@ function TopicNodeComponent({data,id}: NodeProps){
         ].join(","),
       }}
     >
+      <Handle
+        type="source"
+        position={Position.Right}
+        id="source"
+        style={{ opacity: 0 }}
+      />
 
-
-      <Handle type="source" position={Position.Right} id="source" style={{ opacity: 0 }} />
+      {/* Image thumbnail */}
+      {nodeData.imageUrl && (
+        <div className="w-full h-16 rounded-lg overflow-hidden mb-1">
+          <img
+            src={nodeData.imageUrl}
+            alt={nodeData.label}
+            className="w-full h-full object-cover opacity-80"
+          />
+        </div>
+      )}
 
       {/* Category badge */}
       <span
@@ -94,17 +128,16 @@ function TopicNodeComponent({data,id}: NodeProps){
         <span className="absolute bottom-2 right-2 text-[10px] text-zinc-500">
           ✓
         </span>
-        
       )}
 
-        {/* Hover preview */}
-        {hovered && !nodeData.expanded && (
+      {/* Hover preview */}
+      {hovered && !nodeData.expanded && (
         <div
           className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-48 px-3 py-2 rounded-lg text-[11px] text-zinc-300 leading-relaxed pointer-events-none"
           style={{
-            background:  "rgba(10,10,15,0.95)",
-            border:      `1px solid ${colors.border}44`,
-            boxShadow:   `0 4px 20px rgba(0,0,0,0.5)`,
+            background: "rgba(10,10,15,0.95)",
+            border: `1px solid ${colors.border}44`,
+            boxShadow: `0 4px 20px rgba(0,0,0,0.5)`,
           }}
         >
           {previewText}
@@ -114,47 +147,55 @@ function TopicNodeComponent({data,id}: NodeProps){
         </div>
       )}
 
-      <Handle type="target" position={Position.Left} id="target" style={{ opacity: 0 }} />
+      <Handle
+        type="target"
+        position={Position.Left}
+        id="target"
+        style={{ opacity: 0 }}
+      />
     </div>
   );
 }
 
 const nodeTypes: NodeTypes = {
-    topicNode: TopicNodeComponent,
+  topicNode: TopicNodeComponent,
 };
 
-export default function Graph(){
-    const {nodes: storeNodes, edges: storeEdges, status} = useGraph();
-    const [nodes, setNodes, onNodesChange] = useNodesState<TopicNode>([]);
-    const [edges, setEdges, onEdgesChange] = useEdgesState<TopicEdge>([]);
-    const [selectedNode, setSelectedNode] = useState<TopicNode | null>(null);
-    const {fitView} = useReactFlow();
+export default function Graph() {
+  const { nodes: storeNodes, edges: storeEdges, status } = useGraph();
+  const [nodes, setNodes, onNodesChange] = useNodesState<TopicNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<TopicEdge>([]);
+  const [selectedNode, setSelectedNode] = useState<TopicNode | null>(null);
+  const { fitView } = useReactFlow();
 
-    useEffect(() => {
-        setNodes(storeNodes);
-        setEdges(storeEdges);
-    }, [storeNodes, storeEdges, setNodes, setEdges]);
+  useEffect(() => {
+    setNodes(storeNodes);
+    setEdges(storeEdges);
+  }, [storeNodes, storeEdges, setNodes, setEdges]);
 
-    useEffect(() => {
-        if(selectedNode){
-            const updated = storeNodes.find((n) => n.id === selectedNode.id);
-            if(updated) setSelectedNode(updated);
-            //If node finished expanding, refit view to adjust for new nodes
-            if(updated?.data.expanded && !updated?.data.expanding){
-                setTimeout(() => {
-                    fitView({padding: 0.2, duration: 600});
-                }, 100);
-            }
-        }
-    }, [storeNodes]);
+  useEffect(() => {
+    if (selectedNode) {
+      const updated = storeNodes.find((n) => n.id === selectedNode.id);
+      if (updated) setSelectedNode(updated);
+      //If node finished expanding, refit view to adjust for new nodes
+      if (updated?.data.expanded && !updated?.data.expanding) {
+        setTimeout(() => {
+          fitView({ padding: 0.2, duration: 600 });
+        }, 100);
+      }
+    }
+  }, [storeNodes]);
 
-    const handleNodeClick = useCallback((_:React.MouseEvent, node: TopicNode) => {
-        setSelectedNode(node);
-    }, []);
+  const handleNodeClick = useCallback(
+    (_: React.MouseEvent, node: TopicNode) => {
+      setSelectedNode(node);
+    },
+    [],
+  );
 
-    if(status === "idle") return null;
+  if (status === "idle") return null;
 
-    return (
+  return (
     <div className="w-full h-full relative">
       <ReactFlow
         nodes={nodes}
@@ -176,7 +217,7 @@ export default function Graph(){
           size={1}
           color="#ffffff08"
         />
-        <Controls/>
+        <Controls />
         <MiniMap
           nodeColor={(node) => {
             const n = node as TopicNode;

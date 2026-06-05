@@ -13,6 +13,7 @@ export interface TopicNodeData extends Record<string, unknown>{
     expanding: boolean; //clicked and loading expansion
     isRoot: boolean;
     depth: number;
+    imageUrl: string | null;
 }
 
 //Data stored inside every ReactFlow edge
