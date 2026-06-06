@@ -22,11 +22,17 @@ export default function SearchBar() {
 
   return (
     <div className="flex flex-col items-center gap-3 w-full max-w-2xl px-4">
-
       {/* Title — only show when idle or loading */}
       {showTitle && (
-        <div className="flex flex-col items-center gap-1 mb-2">
-          <h1 className="text-4xl font-bold tracking-tight text-white">
+        <div className="flex flex-col items-center gap-1 mt-2">
+          <img
+            src="/transparent-quagmire.png"
+            alt="Quagmire symbol"
+            width={450}
+            height={450}
+            style={{ height: "auto", filter: "invert(1)", marginBottom: "-100px" }}
+          />
+          <h1 className="text-4xl font-bold tracking-tight text-white mt-1">
             Quagmire
           </h1>
           <p className="text-sm text-zinc-500 tracking-widest uppercase">
