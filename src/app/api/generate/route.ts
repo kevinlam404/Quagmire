@@ -84,8 +84,6 @@ export async function POST(request: Request) {
   try {
     const response = await callGemini(SYSTEM_PROMPT, buildGeneratePrompt(safe));
     rawText = response.text;
-    console.log("Raw Gemini response:", rawText);
-    console.log("Response length:", rawText?.length);
   } catch (err) {
     console.error("Error calling Gemini:", err);
     return NextResponse.json(

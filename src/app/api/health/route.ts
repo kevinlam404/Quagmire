@@ -7,7 +7,7 @@ export async function GET(){
     const checks = {
         geminiKey: !!geminiKey && geminiKey.startsWith("AI") && geminiKey.length >= 20,
         environment: process.env.NODE_ENV ?? "unknown",
-        timestamp: new Date().toISOString,
+        timestamp: new Date().toISOString(),
         status: "ok" as const,
     };
 

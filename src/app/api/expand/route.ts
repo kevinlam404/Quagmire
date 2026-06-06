@@ -26,6 +26,8 @@ export async function POST(request: Request){
     //Parse request body
     let body: ExpandRequest;
 
+    
+
     try{
         body = await request.json() as ExpandRequest;
     } catch{
@@ -36,8 +38,12 @@ export async function POST(request: Request){
         } satisfies ErrorResponse, {status: 400});
     }
 
+    const sanitizedLabels = body.existingLabels
+    .filter((l) => typeof l === "string" && l.length < 100)
+    .slice(0, 100);
+
     //Validate required fields
-    if(!body.nodeId || !body.nodeLabel || !body.nodeCategory || !body.nodeDescription || !Array.isArray(body.existingLabels) || !body.categoryCounts){
+    if(!body.nodeId || !body.nodeLabel || !body.nodeCategory || !body.nodeDescription || !Array.isArray(sanitizedLabels) || !body.categoryCounts){
         return NextResponse.json({
             success: false,
             error: "Missing required fields. nodeId, nodeLabel, nodeCategory, nodeDescription, existingLabels, categoryCounts",
@@ -46,7 +52,7 @@ export async function POST(request: Request){
     }
 
     //Guards against ovesized payload
-    if(body.existingLabels.length > 100){
+    if(sanitizedLabels.length > 100){
         return NextResponse.json({
             success: false,
             error: "Graph has too many nodes to expand further. RIP",
@@ -69,7 +75,7 @@ export async function POST(request: Request){
     let rawText: string;
 
     try{
-        const response = await callGemini(SYSTEM_PROMPT, buildExpandedPrompt(safeLabel, body.nodeCategory, body.nodeDescription, body.existingLabels, body.categoryCounts));
+        const response = await callGemini(SYSTEM_PROMPT, buildExpandedPrompt(safeLabel, body.nodeCategory, body.nodeDescription, sanitizedLabels, body.categoryCounts));
         rawText = response.text;
     } catch{
         return NextResponse.json({

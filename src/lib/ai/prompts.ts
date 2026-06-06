@@ -1,3 +1,5 @@
+import "server-only";
+
 export type PromptCategory = | "concept" | "community" | "creator" | "trend" | "platform" | "event" | "opposition" | "aesthetic" | "ideology" | "media";
 
 export type ObscurityLvl = 1 | 2 | 3;

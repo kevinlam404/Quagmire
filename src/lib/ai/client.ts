@@ -4,7 +4,7 @@ import {
   GenerationConfig,
 } from "@google/generative-ai";
 import type { ErrorCode } from "@/types/graph";
-import { error } from "console";
+import "server-only";
 
 //Types
 export interface GeminiResponse {
@@ -159,7 +159,10 @@ export function sanitizeTopic(raw: string): {
   }
 
   // Strip HTML tags
-  const stripped = trimmed.replace(/<[^>]*>/g, "").trim();
+  const stripped = trimmed
+  .replace(/<[^>]*>/g, "")
+  .replace(/['"]/g, "")
+  .trim();
 
   if (stripped.length < MIN_TOPIC_LENGTH) {
     return { safe: "", rejected: true, reason: "Topic too short after sanitization" };

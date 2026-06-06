@@ -113,7 +113,6 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
         ) : (
           <button
             onClick={handleExpand}
-            cursor-pointer="true"
             disabled={isLoading || isExpanding}
             className="cursor-pointer w-full py-3 rounded-xl text-sm font-medium bg-violet-600 hover:bg-violet-500 text-white disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200"
           >
