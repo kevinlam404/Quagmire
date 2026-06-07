@@ -4,8 +4,6 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ReactFlow,
   Background,
-  Controls,
-  MiniMap,
   BackgroundVariant,
   useNodesState,
   useEdgesState,
@@ -219,14 +217,6 @@ export default function Graph() {
           gap={24}
           size={1}
           color="#ffffff08"
-        />
-        <Controls />
-        <MiniMap
-          nodeColor={(node) => {
-            const n = node as TopicNode;
-            return CATEGORY_COLORS[n.data?.category]?.border ?? "#555";
-          }}
-          maskColor="rgba(0,0,0,0.6)"
         />
       </ReactFlow>
 
