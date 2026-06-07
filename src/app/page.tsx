@@ -13,7 +13,6 @@ function ParticleBackground() {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
@@ -42,7 +41,6 @@ function ParticleBackground() {
         p.y += p.vy;
         if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
         if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
         ctx.beginPath();
         ctx.arc(p.x, p.y, 1.5, 0, Math.PI * 2);
         ctx.fillStyle = "rgba(124,58,237,0.5)";
@@ -88,13 +86,14 @@ export default function Home() {
 
   return (
     <main className="relative flex flex-col items-center justify-center w-full h-screen bg-black overflow-hidden">
-      {/* Particle background */ <ParticleBackground />}
+      <ParticleBackground />
+
       {/* Search bar */}
       <div
         className={[
-          "absolute z-10 transition-all duration-500",
+          "absolute z-10 transition-all duration-500 px-4",
           showGraph
-            ? "top-20 left-1/2 -translate-x-1/2 w-full max-w-xl"
+            ? "top-16 left-1/2 -translate-x-1/2 w-full max-w-lg"
             : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl",
         ].join(" ")}
       >
@@ -104,7 +103,7 @@ export default function Home() {
       {/* Graph canvas */}
       {showGraph && (
         <ReactFlowProvider>
-          <div className="absolute inset-0 z-0 pt-12">
+          <div className="absolute inset-0 z-0 pt-14">
             <Header />
             <Graph />
           </div>
