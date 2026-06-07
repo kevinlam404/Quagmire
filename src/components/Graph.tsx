@@ -208,9 +208,12 @@ export default function Graph() {
         maxZoom={2}
         proOptions={{ hideAttribution: true }}
         className="bg-transparent"
-        panOnScroll={false}
-        zoomOnPinch={true}
         panOnDrag={true}
+        panOnScroll={true}
+        zoomOnScroll={true}
+        zoomOnPinch={true}
+        zoomOnDoubleClick={false}
+        selectionOnDrag={false}
       >
         <Background
           variant={BackgroundVariant.Dots}
