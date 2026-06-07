@@ -68,7 +68,7 @@ export default function Header(){
         </div>
       )}
 
-      {/* Right — stats + actions */}
+      {/* Right side*/}
       <div className="flex items-center gap-2 shrink-0">
         {!isMobile && (
           <span className="text-zinc-600 text-xs">

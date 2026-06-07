@@ -209,7 +209,7 @@ export default function Graph() {
         proOptions={{ hideAttribution: true }}
         className="bg-transparent"
         panOnDrag={true}
-        panOnScroll={true}
+        panOnScroll={false}
         zoomOnScroll={true}
         zoomOnPinch={true}
         zoomOnDoubleClick={false}

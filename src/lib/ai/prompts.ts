@@ -41,8 +41,9 @@ const EDGE_RULES = `
 `.trim();
 
 const DESCRIPTION_RULES = `
--Description must be 2-3 sentences max
+-Description must be 10-20 sentences max
 -Write naturally and conversationally, in Quagmire's voice
+-Go deep - explain the origin, why it matters, who's involved, and what makes it interesting
 -Never sound  academic or dry, make it fun and engaging to read
 -Never use phrases like "is a term used to describe", "refers to"
 `.trim();
