@@ -1,7 +1,7 @@
 import { MarkerType } from "@xyflow/react";
 import type { RawNode, RawEdge, RawCrossEdge, TopicNode, TopicEdge, TopicNodeData, TopicEdgeData } from "@/types/graph";
 import { CATEGORY_COLORS, OBSCURITY_STYLES } from "@/types/graph";
-import { resolveLabelToId, slugify } from "@/lib/ai/prompts";
+import { resolveLabelToId, slugify } from "@/lib/graph/utils";
 
 
 //Constants 

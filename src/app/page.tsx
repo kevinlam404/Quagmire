@@ -104,7 +104,7 @@ export default function Home() {
       {/* Graph canvas */}
       {showGraph && (
         <ReactFlowProvider>
-          <div className="absolute inset-0 z-0">
+          <div className="absolute inset-0 z-0 pt-12">
             <Header />
             <Graph />
           </div>

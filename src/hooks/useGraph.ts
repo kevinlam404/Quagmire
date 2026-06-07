@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import {buildGraph } from "@/lib/graph/buildGraph";
 import {expandNode as expandNodeFn} from "@/lib/graph/expandNode";
-import {countCategories} from "@/lib/ai/prompts";
+import {countCategories} from "@/lib/graph/utils";
 import type { GraphState, TopicNode, TopicEdge, HistoryEntry, RawGenerateResponse, RawExpandResponse, PromptCategory} from "@/types/graph";
 
 //Initial state

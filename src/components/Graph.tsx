@@ -130,19 +130,19 @@ function TopicNodeComponent({ data, id }: NodeProps) {
         </span>
       )}
 
-      {/* Hover preview */}
+      {/* Hover tooltip — desktop only */}
       {hovered && !nodeData.expanded && (
         <div
-          className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-48 px-3 py-2 rounded-lg text-[11px] text-zinc-300 leading-relaxed pointer-events-none"
+          className="hidden sm:block absolute bottom-full left-1/2 -translate-x-1/2 mb-2 z-50 w-48 px-3 py-2 rounded-lg text-[11px] text-zinc-300 leading-relaxed pointer-events-none"
           style={{
             background: "rgba(10,10,15,0.95)",
             border: `1px solid ${colors.border}44`,
-            boxShadow: `0 4px 20px rgba(0,0,0,0.5)`,
+            boxShadow: "0 4px 20px rgba(0,0,0,0.5)",
           }}
         >
           {previewText}
           <div className="mt-1 text-[10px] text-zinc-600">
-            {nodeData.expanded ? "Already explored" : "Click to explore →"}
+            Click to explore →
           </div>
         </div>
       )}
@@ -210,6 +210,9 @@ export default function Graph() {
         maxZoom={2}
         proOptions={{ hideAttribution: true }}
         className="bg-transparent"
+        panOnScroll={false}
+        zoomOnPinch={true}
+        panOnDrag={true}
       >
         <Background
           variant={BackgroundVariant.Dots}
