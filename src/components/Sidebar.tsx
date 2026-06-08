@@ -51,7 +51,7 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
         />
       )}
 
-      <div className={containerClass} style={{ zIndex: 29 }}>
+      <div className={containerClass} style={{ zIndex: expanded ? 100:29 }}>
         {/* Mobile drag handle */}
         {isMobile && !expanded && (
           <div className="flex justify-center pt-3 pb-1 shrink-0">
