@@ -4,6 +4,8 @@
 
 Quagmire is a full-stack AI-powered knowledge graph explorer that maps how internet culture, ideas, trends, and rabbit holes connect. Type any topic and watch it unfold into an interactive web of concepts, communities, creators, events, and ideologies — then keep clicking deeper.
 
+<img width="1920" height="949" alt="quagmire-example" src="https://github.com/user-attachments/assets/9e55578e-37d8-4c86-bae7-952511844fc3" />
+
 ![demo](https://github.com/kevinlam404/Quagmire/releases/download/demo/quagmire-demo.mp4)
 
 ---
