@@ -26,10 +26,10 @@ Type "dopamine detox" and you don't just get a definition — you get a visual g
 
 | Layer | Technology |
 |-------|-----------|
-| Frontend | Next.js 16, React 19, TypeScript |
-| Styling | Tailwind CSS v4, Glassmorphism |
-| Graph | ReactFlow v12 (@xyflow/react) |
-| Layout | Dagre (@dagrejs/dagre) |
+| Frontend | Next.js, React, TypeScript |
+| Styling | Tailwind CSS |
+| Graph | ReactFlow |
+| Layout | Dagre |
 | State | Zustand |
 | AI | Google Gemini (gemini-2.5-flash-lite) |
 | Images | Wikipedia REST API |
