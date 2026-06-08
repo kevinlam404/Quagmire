@@ -33,12 +33,12 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
   // Desktop: normal vs fullscreen
   // Mobile: bottom sheet vs fullscreen
   const containerClass = isMobile
-    ? expanded
-      ? "fixed inset-0 flex flex-col bg-zinc-950"
-      : "fixed bottom-0 left-0 right-0 flex flex-col bg-zinc-950 border-t border-white/10 rounded-t-2xl max-h-[75vh]"
-    : expanded
-      ? "absolute inset-0 flex flex-col bg-zinc-950/98 backdrop-blur-md"
-      : "absolute top-0 right-0 h-full w-96 flex flex-col bg-zinc-950/90 border-l border-white/10 backdrop-blur-md";
+  ? expanded
+    ? "fixed inset-0 flex flex-col bg-zinc-950"
+    : "fixed bottom-0 left-0 right-0 flex flex-col bg-zinc-950 border-t border-white/10 rounded-t-2xl max-h-[75vh]"
+  : expanded
+    ? "fixed inset-0 flex flex-col bg-zinc-950/98 backdrop-blur-md"
+    : "absolute top-0 right-0 h-full w-96 flex flex-col bg-zinc-950/90 border-l border-white/10 backdrop-blur-md";
 
   return (
     <>
