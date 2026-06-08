@@ -82,7 +82,7 @@ function ParticleBackground() {
 
 export default function Home() {
   const { status } = useGraph();
-  const showGraph = status === "ready";
+  const showGraph = status !== "idle" && status !== "loading";
   const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   return (
