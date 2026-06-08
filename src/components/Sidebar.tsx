@@ -9,9 +9,14 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 interface SidebarProps {
   node: TopicNode | null;
   onClose: () => void;
+  onExpandChange: (expanded: boolean) => void;
 }
 
-export default function Sidebar({ node, onClose }: SidebarProps) {
+export default function Sidebar({
+  node,
+  onClose,
+  onExpandChange,
+}: SidebarProps) {
   const { expandNode, status, generateGraph } = useGraph();
   const isMobile = useIsMobile();
   const [expanded, setExpanded] = useState(false);
@@ -25,20 +30,30 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
   const isExpanded = nodeData.expanded;
   const isLoading = status === "expanding";
 
+  const toggleExpanded = () => {
+    const next = !expanded;
+    setExpanded(next);
+    onExpandChange(next);
+  };
+
+  const handleClose = () => {
+    setExpanded(false);
+    onExpandChange(false);
+    onClose();
+  };
+
   const handleExpand = () => {
     if (isExpanded || isExpanding || isLoading) return;
     expandNode(node.id);
   };
 
-  // Desktop: normal vs fullscreen
-  // Mobile: bottom sheet vs fullscreen
   const containerClass = isMobile
-  ? expanded
-    ? "fixed inset-0 flex flex-col bg-zinc-950"
-    : "fixed bottom-0 left-0 right-0 flex flex-col bg-zinc-950 border-t border-white/10 rounded-t-2xl max-h-[75vh]"
-  : expanded
-    ? "fixed inset-0 flex flex-col bg-zinc-950/98 backdrop-blur-md"
-    : "absolute top-0 right-0 h-full w-96 flex flex-col bg-zinc-950/90 border-l border-white/10 backdrop-blur-md";
+    ? expanded
+      ? "fixed inset-0 flex flex-col bg-zinc-950"
+      : "fixed bottom-0 left-0 right-0 flex flex-col bg-zinc-950 border-t border-white/10 rounded-t-2xl max-h-[75vh]"
+    : expanded
+      ? "fixed inset-0 flex flex-col bg-zinc-950/98 backdrop-blur-md"
+      : "absolute top-0 right-0 h-full w-96 flex flex-col bg-zinc-950/90 border-l border-white/10 backdrop-blur-md";
 
   return (
     <>
@@ -47,11 +62,11 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
         <div
           className="fixed inset-0 bg-black/50"
           style={{ zIndex: 28 }}
-          onClick={onClose}
+          onClick={handleClose}
         />
       )}
 
-      <div className={containerClass} style={{ zIndex: expanded ? 100:29 }}>
+      <div className={containerClass} style={{ zIndex: expanded ? 100 : 29 }}>
         {/* Mobile drag handle */}
         {isMobile && !expanded && (
           <div className="flex justify-center pt-3 pb-1 shrink-0">
@@ -73,19 +88,15 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
           </span>
 
           <div className="flex items-center gap-2">
-            {/* Expand/collapse toggle */}
             <button
-              onClick={() => setExpanded((prev) => !prev)}
+              onClick={toggleExpanded}
               className="cursor-pointer text-zinc-500 hover:text-white transition-colors text-sm leading-none px-2 py-1 rounded-lg border border-white/10 hover:border-white/20 bg-white/5"
               title={expanded ? "Collapse" : "Expand to full screen"}
             >
               {expanded ? "⊟" : "⊞"}
             </button>
             <button
-              onClick={() => {
-                setExpanded(false);
-                onClose();
-              }}
+              onClick={handleClose}
               className="cursor-pointer text-zinc-500 hover:text-white transition-colors text-lg leading-none"
             >
               ✕
@@ -95,7 +106,6 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
 
         {/* Content */}
         <div className="flex flex-col gap-5 px-5 py-5 flex-1 overflow-y-auto">
-          {/* Hero image */}
           {nodeData.imageUrl && (
             <div
               className={`w-full rounded-xl overflow-hidden shrink-0 ${expanded ? "h-56" : "h-36"}`}
@@ -108,7 +118,6 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
             </div>
           )}
 
-          {/* Label + obscurity */}
           <div className="flex items-start justify-between gap-2">
             <h2
               className={`font-bold leading-tight ${expanded ? "text-2xl" : "text-xl"}`}
@@ -124,14 +133,12 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
             )}
           </div>
 
-          {/* Description */}
           <p
             className={`text-zinc-400 leading-relaxed ${expanded ? "text-base" : "text-sm"}`}
           >
             {nodeData.description}
           </p>
 
-          {/* Depth indicator */}
           <div className="flex items-center gap-2">
             <span className="text-[11px] uppercase tracking-widest text-zinc-600 font-semibold">
               Depth
@@ -152,7 +159,6 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
             </span>
           </div>
 
-          {/* Obscurity level */}
           <div className="flex items-center gap-2">
             <span className="text-[11px] uppercase tracking-widest text-zinc-600 font-semibold">
               Obscurity
@@ -180,7 +186,6 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
             </span>
           </div>
 
-          {/* Seeds */}
           {nodeData.seeds?.length > 0 && (
             <div className="flex flex-col gap-2">
               <span className="text-[11px] uppercase tracking-widest text-zinc-600 font-semibold">
@@ -191,8 +196,7 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
                   <button
                     key={i}
                     onClick={() => {
-                      setExpanded(false);
-                      onClose();
+                      handleClose();
                       generateGraph(seed);
                     }}
                     className="cursor-pointer text-[11px] px-3 py-1.5 rounded-full border border-white/10 text-zinc-400 bg-white/5 hover:border-violet-500/60 hover:text-violet-300 hover:bg-violet-500/10 transition-all duration-200"
@@ -204,7 +208,6 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
             </div>
           )}
 
-          {/* Connection status */}
           <div className="flex items-center gap-2 text-[11px] text-zinc-600">
             <span className="uppercase tracking-widest font-semibold">
               Status
@@ -214,7 +217,7 @@ export default function Sidebar({ node, onClose }: SidebarProps) {
               style={{
                 background: isExpanded
                   ? "rgba(255,255,255,0.05)"
-                  : `${colors.background}`,
+                  : colors.background,
                 color: isExpanded ? "#71717a" : colors.text,
                 border: `1px solid ${isExpanded ? "rgba(255,255,255,0.08)" : colors.border}`,
               }}

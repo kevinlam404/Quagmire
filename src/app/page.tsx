@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import Graph from "@/components/Graph";
 import { useGraph } from "@/hooks/useGraph";
@@ -83,29 +83,31 @@ function ParticleBackground() {
 export default function Home() {
   const { status } = useGraph();
   const showGraph = status !== "idle";
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
 
   return (
     <main className="relative flex flex-col items-center justify-center w-full h-screen bg-black overflow-hidden">
       <ParticleBackground />
 
-      {/* Search bar */}
-      <div
-        className={[
-          "absolute z-10 transition-all duration-500 px-4",
-          showGraph
-            ? "top-16 left-1/2 -translate-x-1/2 w-full max-w-lg"
-            : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl",
-        ].join(" ")}
-      >
-        <SearchBar />
-      </div>
+      {/* Search bar — hidden when sidebar is expanded */}
+      {!sidebarExpanded && (
+        <div
+          className={[
+            "absolute z-10 transition-all duration-500 px-4",
+            showGraph
+              ? "top-16 left-1/2 -translate-x-1/2 w-full max-w-lg"
+              : "top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl",
+          ].join(" ")}
+        >
+          <SearchBar />
+        </div>
+      )}
 
-      {/* Graph canvas */}
       {showGraph && (
         <ReactFlowProvider>
           <div className="absolute inset-0 z-0 pt-14">
             <Header />
-            <Graph />
+            <Graph onSidebarExpandChange={setSidebarExpanded} />
           </div>
         </ReactFlowProvider>
       )}

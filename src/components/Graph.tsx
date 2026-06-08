@@ -159,12 +159,22 @@ const nodeTypes: NodeTypes = {
   topicNode: TopicNodeComponent,
 };
 
-export default function Graph() {
+interface GraphProps {
+  onSidebarExpandChange?: (expanded: boolean) => void;
+}
+
+export default function Graph({ onSidebarExpandChange }: GraphProps) {
   const { nodes: storeNodes, edges: storeEdges, status } = useGraph();
   const [nodes, setNodes, onNodesChange] = useNodesState<TopicNode>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<TopicEdge>([]);
   const [selectedNode, setSelectedNode] = useState<TopicNode | null>(null);
+  const [sidebarExpanded, setSidebarExpanded] = useState(false);
   const { fitView } = useReactFlow();
+
+  const handleSidebarExpandChange = (val: boolean) => {
+    setSidebarExpanded(val);
+    onSidebarExpandChange?.(val);
+  };
 
   useEffect(() => {
     setNodes(storeNodes);
@@ -175,7 +185,6 @@ export default function Graph() {
     if (selectedNode) {
       const updated = storeNodes.find((n) => n.id === selectedNode.id);
       if (updated) setSelectedNode(updated);
-      //If node finished expanding, refit view to adjust for new nodes
       if (updated?.data.expanded && !updated?.data.expanding) {
         setTimeout(() => {
           fitView({ padding: 0.2, duration: 600 });
@@ -223,7 +232,14 @@ export default function Graph() {
         />
       </ReactFlow>
 
-      <Sidebar node={selectedNode} onClose={() => setSelectedNode(null)} />
+      <Sidebar
+        node={selectedNode}
+        onClose={() => {
+          setSelectedNode(null);
+          handleSidebarExpandChange(false);
+        }}
+        onExpandChange={handleSidebarExpandChange}
+      />
     </div>
   );
 }
