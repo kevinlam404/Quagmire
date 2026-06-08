@@ -68,7 +68,7 @@ Each node has:
 
 - Interactive knowledge graph with pan, zoom, and drag
 - AI-generated nodes with category colors, obscurity indicators, and relationship labels
-- Rich sidebar with full descriptions, depth indicators, obscurity levels, and rabbit hole seeds
+- Didebar with full descriptions, depth indicators, obscurity levels, and rabbit hole seeds
 - Wikipedia thumbnail images on nodes
 - Breadcrumb navigation history in the header
 - Clickable seeds that generate entirely new graphs
