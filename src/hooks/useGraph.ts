@@ -1,46 +1,60 @@
-import {create} from "zustand";
-import {buildGraph } from "@/lib/graph/buildGraph";
-import {expandNode as expandNodeFn} from "@/lib/graph/expandNode";
-import {countCategories} from "@/lib/graph/utils";
-import type { GraphState, TopicNode, TopicEdge, HistoryEntry, RawGenerateResponse, RawExpandResponse, PromptCategory} from "@/types/graph";
+import { create } from "zustand";
+import { buildGraph } from "@/lib/graph/buildGraph";
+import { expandNode as expandNodeFn } from "@/lib/graph/expandNode";
+import { countCategories } from "@/lib/graph/utils";
+import type {
+  GraphState,
+  TopicNode,
+  TopicEdge,
+  HistoryEntry,
+  RawGenerateResponse,
+  RawExpandResponse,
+  PromptCategory,
+} from "@/types/graph";
 
 //Initial state
 const INITIAL_STATE = {
-    nodes: [] as TopicNode[],
-    edges: [] as TopicEdge[],
-    rootTopic: null as string | null,
-    status: "idle" as const,
-    error: null as string | null,
-    history: [] as HistoryEntry[],
-    historyIndex: -1,
+  nodes: [] as TopicNode[],
+  edges: [] as TopicEdge[],
+  rootTopic: null as string | null,
+  status: "idle" as const,
+  error: null as string | null,
+  history: [] as HistoryEntry[],
+  historyIndex: -1,
 };
 
 //History helper
-function createHistoryEntry(nodes: TopicNode[], edges: TopicEdge[], trigger: string): HistoryEntry{
-    return {
-        nodes: [...nodes],
-        edges: [...edges],
-        timestamp: Date.now(),
-        trigger,
-    };
+function createHistoryEntry(
+  nodes: TopicNode[],
+  edges: TopicEdge[],
+  trigger: string,
+): HistoryEntry {
+  return {
+    nodes: [...nodes],
+    edges: [...edges],
+    timestamp: Date.now(),
+    trigger,
+  };
 }
 
 // Image fetcher
 async function fetchAndAttachImages(
   nodes: TopicNode[],
-  updateNodes: (updater: (nodes: TopicNode[]) => TopicNode[]) => void
+  updateNodes: (updater: (nodes: TopicNode[]) => TopicNode[]) => void,
 ) {
   try {
-    const labels   = nodes.map((n) => n.data.label);
+    const labels = nodes.map((n) => n.data.label);
     const response = await fetch("/api/images", {
-      method:  "POST",
+      method: "POST",
       headers: { "Content-Type": "application/json" },
-      body:    JSON.stringify({ labels }),
+      body: JSON.stringify({ labels }),
     });
 
     if (!response.ok) return;
 
-    const { images } = await response.json() as { images: Record<string, string | null> };
+    const { images } = (await response.json()) as {
+      images: Record<string, string | null>;
+    };
 
     updateNodes((current) =>
       current.map((node) => ({
@@ -49,9 +63,8 @@ async function fetchAndAttachImages(
           ...node.data,
           imageUrl: images[node.data.label] ?? null,
         },
-      }))
+      })),
     );
-
   } catch {
     //fail silently
   }
@@ -67,9 +80,9 @@ export const useGraph = create<GraphState>((set, get) => ({
 
     try {
       const response = await fetch("/api/generate", {
-        method:  "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body:    JSON.stringify({ topic }),
+        body: JSON.stringify({ topic }),
       });
 
       const data = await response.json();
@@ -77,7 +90,7 @@ export const useGraph = create<GraphState>((set, get) => ({
       if (!response.ok || !data.success) {
         set({
           status: "error",
-          error:  data.error ?? "Failed to generate graph",
+          error: data.error ?? "Failed to generate graph",
         });
         return;
       }
@@ -98,12 +111,14 @@ export const useGraph = create<GraphState>((set, get) => ({
       });
 
       //Fetch images after graph renders
-      fetchAndAttachImages(nodes, (updater) => set((state) => ({nodes: updater(state.nodes)})));
-
+      fetchAndAttachImages(nodes, (updater) =>
+        set((state) => ({ nodes: updater(state.nodes) })),
+      );
     } catch {
       set({
         status: "error",
-        error: "Network error. Make sure you paid your wifi bill this month lol",
+        error:
+          "Network error. Make sure you paid your wifi bill this month lol",
       });
     }
   },
@@ -125,21 +140,19 @@ export const useGraph = create<GraphState>((set, get) => ({
     // Mark node as expanding
     set({
       status: "expanding",
-      nodes:  nodes.map((n) =>
-        n.id === nodeId
-          ? { ...n, data: { ...n.data, expanding: true } }
-          : n
+      nodes: nodes.map((n) =>
+        n.id === nodeId ? { ...n, data: { ...n.data, expanding: true } } : n,
       ),
     });
 
     try {
-      const existingLabels  = nodes.map((n) => n.data.label);
-      const categoryCounts  = countCategories(
-        nodes.map((n) => ({ category: n.data.category }))
+      const existingLabels = nodes.map((n) => n.data.label);
+      const categoryCounts = countCategories(
+        nodes.map((n) => ({ category: n.data.category })),
       );
 
       const response = await fetch("/api/expand", {
-        method:  "POST",
+        method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           nodeId,
@@ -157,11 +170,11 @@ export const useGraph = create<GraphState>((set, get) => ({
         // Revert expanding state on failure
         set({
           status: "ready",
-          error:  data.error ?? "Failed to expand node",
-          nodes:  nodes.map((n) =>
+          error: data.error ?? "Failed to expand node",
+          nodes: nodes.map((n) =>
             n.id === nodeId
               ? { ...n, data: { ...n.data, expanding: false } }
-              : n
+              : n,
           ),
         });
         return;
@@ -172,14 +185,10 @@ export const useGraph = create<GraphState>((set, get) => ({
         nodes,
         edges,
         raw,
-        nodeId
+        nodeId,
       );
 
-      const entry = createHistoryEntry(
-        newNodes,
-        newEdges,
-        node.data.label
-      );
+      const entry = createHistoryEntry(newNodes, newEdges, node.data.label);
 
       const { history, historyIndex } = get();
 
@@ -197,18 +206,16 @@ export const useGraph = create<GraphState>((set, get) => ({
 
       //Fetch images for new nodes only
       fetchAndAttachImages(newNodes, (updater) => {
-        set((state) => ({nodes: updater(state.nodes)}));
-      })
-
+        set((state) => ({ nodes: updater(state.nodes) }));
+      });
     } catch {
       // Revert expanding state on network error
       set({
         status: "ready",
-        error:  "Network error. Make sure you paid your wifi bill this month lol",
-        nodes:  nodes.map((n) =>
-          n.id === nodeId
-            ? { ...n, data: { ...n.data, expanding: false } }
-            : n
+        error:
+          "Network error. Make sure you paid your wifi bill this month lol",
+        nodes: nodes.map((n) =>
+          n.id === nodeId ? { ...n, data: { ...n.data, expanding: false } } : n,
         ),
       });
     }
@@ -237,5 +244,5 @@ export const useGraph = create<GraphState>((set, get) => ({
       error: null,
       historyIndex: index,
     });
-  }, 
+  },
 }));
